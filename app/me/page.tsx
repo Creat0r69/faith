@@ -24,7 +24,7 @@ export default function MePage() {
   const { user: privyUser, ready: privyReady, authenticated, logout: privyLogout } = usePrivy();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isLoaded } = useSidebarState();
+  const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isMobile, toggleSidebar, isLoaded } = useSidebarState();
   const [selectedPage, setSelectedPage] = useState('profile');
   const walletBalance = useWalletBalance();
 
@@ -98,6 +98,8 @@ export default function MePage() {
           username: user.username,
           avatarUrl: user.avatarUrl
         }}
+        isMobile={isMobile}
+        onToggleSidebar={toggleSidebar}
       />
 
       {/* Main Layout */}
@@ -130,11 +132,13 @@ export default function MePage() {
             name: user.name
           }}
           handleLogout={handleLogout}
+          isMobile={isMobile}
+          onCloseMobile={() => toggleSidebar()}
         />
 
         {/* Main Content */}
-        <div className={`flex-1 flex items-start justify-center p-8 transition-all duration-300 pb-24 ${
-          sidebarOpen ? (sidebarCollapsed ? 'mt-24 ml-20' : 'mt-24 ml-64') : 'mt-24 ml-0'
+        <div className={`flex-1 flex items-start justify-center p-4 sm:p-8 transition-all duration-300 pb-24 ${
+          isMobile ? 'mt-16 ml-0' : (sidebarOpen ? (sidebarCollapsed ? 'mt-24 ml-20' : 'mt-24 ml-64') : 'mt-24 ml-0')
         }`}>
           <style>{`
             @keyframes moveDotBottom {

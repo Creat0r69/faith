@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePrivy, useLoginWithOAuth } from '@privy-io/react-auth';
@@ -67,6 +68,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="text-center">
+        {/* Logo */}
+        <div className="mb-8 flex justify-center">
+          <Image
+            src="/logo.png"
+            alt="Faith Logo"
+            width={80}
+            height={80}
+            className="object-contain"
+          />
+        </div>
+        
         <h1 className="text-4xl font-bold text-green-400 mb-2">faith_site</h1>
         <p className="text-gray-400 mb-12">Log in with your X account</p>
         

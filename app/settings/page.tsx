@@ -23,7 +23,7 @@ export default function SettingsPage() {
   const { logout: privyLogout } = usePrivy();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isLoaded } = useSidebarState();
+  const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isMobile, toggleSidebar, isLoaded } = useSidebarState();
   const [selectedPage, setSelectedPage] = useState('settings');
 
   useEffect(() => {
@@ -91,6 +91,8 @@ export default function SettingsPage() {
           username: user.username,
           avatarUrl: user.avatarUrl
         }}
+        isMobile={isMobile}
+        onToggleSidebar={toggleSidebar}
       />
 
       {/* Main Layout */}
@@ -123,26 +125,28 @@ export default function SettingsPage() {
             name: user.name
           }}
           handleLogout={handleLogout}
+          isMobile={isMobile}
+          onCloseMobile={() => toggleSidebar()}
         />
 
         {/* Main Content */}
-        <div className={`flex-1 flex items-start justify-center p-8 transition-all duration-300 pb-24 ${
-          sidebarOpen ? (sidebarCollapsed ? 'mt-24 ml-20' : 'mt-24 ml-64') : 'mt-24 ml-0'
+        <div className={`flex-1 flex items-start justify-center p-4 sm:p-8 transition-all duration-300 pb-24 ${
+          isMobile ? 'mt-16 ml-0' : (sidebarOpen ? (sidebarCollapsed ? 'mt-24 ml-20' : 'mt-24 ml-64') : 'mt-24 ml-0')
         }`}>
           <div className="w-full max-w-lg">
             {/* Profile Section */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-8 sm:mb-12">
               {user.avatarUrl && (
                 <img
                   src={user.avatarUrl}
                   alt={user.name}
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg" 
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full mx-auto mb-4 object-cover shadow-lg" 
                   style={{borderWidth: '2px', borderColor: '#22c55e'}}
                 />
               )}
-              <h1 className="text-3xl font-bold text-white mb-2">${user.username.toUpperCase()}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">${user.username.toUpperCase()}</h1>
               <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
-                🔗 {user.bio || 'No bio set'}
+                &#128279; {user.bio || 'No bio set'}
               </p>
             </div>
               
@@ -160,7 +164,7 @@ export default function SettingsPage() {
                       item.onClick();
                     }
                   }}
-                  className="w-full flex items-center justify-between px-6 py-4 rounded-xl transition hover:bg-green-500/10 group block"
+                  className="w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition hover:bg-green-500/10 group block"
                   style={{
                     backgroundColor: '#161618',
                     border: '1px solid #2f3031'

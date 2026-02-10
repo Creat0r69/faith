@@ -5,6 +5,10 @@ import PrivyProviderWrapper from '@/app/providers/PrivyProvider';
 export const metadata: Metadata = {
   title: 'Faith Site',
   description: 'Login with X (Twitter)',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({

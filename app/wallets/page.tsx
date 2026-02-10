@@ -36,7 +36,7 @@ export default function WalletsPage() {
   const { selectedAddress, setSelectedAddress } = useSelectedWallet();
   const [appUser, setAppUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isLoaded } = useSidebarState();
+  const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isMobile, toggleSidebar, isLoaded } = useSidebarState();
   const [selectedPage, setSelectedPage] = useState('wallets');
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
@@ -202,6 +202,8 @@ export default function WalletsPage() {
           username: appUser.username,
           avatarUrl: appUser.avatarUrl
         }}
+        isMobile={isMobile}
+        onToggleSidebar={toggleSidebar}
       />
 
       {/* Main Layout */}
@@ -234,19 +236,21 @@ export default function WalletsPage() {
             name: appUser.name
           }}
           handleLogout={handleLogout}
+          isMobile={isMobile}
+          onCloseMobile={() => toggleSidebar()}
         />
 
         {/* Main Content */}
-        <div className={`flex-1 flex items-start justify-center p-8 transition-all duration-300 pb-24 ${
-          sidebarOpen ? (sidebarCollapsed ? 'mt-24 ml-20' : 'mt-24 ml-64') : 'mt-24 ml-0'
+        <div className={`flex-1 flex items-start justify-center p-4 sm:p-8 transition-all duration-300 pb-24 ${
+          isMobile ? 'mt-16 ml-0' : (sidebarOpen ? (sidebarCollapsed ? 'mt-24 ml-20' : 'mt-24 ml-64') : 'mt-24 ml-0')
         }`}>
           <div className="w-full max-w-2xl">
             {/* Debug Info - Remove in production */}
 
             {/* Header */}
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-white mb-3">Wallet Management</h1>
-              <p className="text-gray-400 text-base">Select a wallet to view its launched coins and royalties</p>
+            <div className="text-center mb-8 sm:mb-12">
+              <h1 className="text-2xl sm:text-4xl font-bold text-white mb-3">Wallet Management</h1>
+              <p className="text-gray-400 text-sm sm:text-base">Select a wallet to view its launched coins and royalties</p>
             </div>
 
             {/* Solana Wallets Section */}
@@ -278,22 +282,22 @@ export default function WalletsPage() {
                     <button
                       key={wallet.id}
                       onClick={() => handleSelectWallet(wallet.id)}
-                      className="w-full flex items-center justify-between p-6 rounded-xl transition"
+                      className="w-full flex items-center justify-between p-4 sm:p-6 rounded-xl transition"
                       style={{
                         backgroundColor: '#161618',
                         border: '1px solid #2f3031',
                       }}
                     >
-                      <div className="flex-1 text-left">
-                        <p className="text-white font-semibold mb-1">{wallet.address}</p>
-                        <div className="flex items-center gap-3">
-                          <span className="text-green-400 text-sm font-bold">
+                      <div className="flex-1 text-left min-w-0">
+                        <p className="text-white font-semibold mb-1 text-sm sm:text-base truncate">{wallet.address}</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                          <span className="text-green-400 text-xs sm:text-sm font-bold">
                             {balances[wallet.id] ? `${balances[wallet.id].sol} SOL` : 'Loading...'}
                             {balances[wallet.id]?.usd && (
                               <span className="text-gray-400 font-normal ml-1">(${balances[wallet.id].usd})</span>
                             )}
                           </span>
-                          <span className="text-gray-600">|</span>
+                          <span className="text-gray-600 hidden sm:inline">|</span>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();

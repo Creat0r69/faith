@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Home, User, Settings, LogOut, Menu } from 'lucide-react';
 
 interface DashboardSidebarProps {
@@ -13,6 +14,8 @@ interface DashboardSidebarProps {
     name: string;
   };
   handleLogout: () => void;
+  isMobile?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export default function DashboardSidebar({
@@ -23,11 +26,31 @@ export default function DashboardSidebar({
   setSelectedPage,
   user,
   handleLogout,
+  isMobile = false,
+  onCloseMobile,
 }: DashboardSidebarProps) {
+  const handleNavClick = (page: string) => {
+    setSelectedPage(page);
+    if (isMobile && onCloseMobile) {
+      onCloseMobile();
+    }
+  };
+
   return (
-    <div className={`fixed left-0 top-0 bottom-0 p-6 flex flex-col transition-all duration-300 overflow-y-auto z-40 scrollbar-hide ${
-      sidebarOpen ? (sidebarCollapsed ? 'w-20' : 'w-64') : 'w-0'
-    }`} style={{backgroundColor: '#0d0d0f', scrollbarWidth: 'none', msOverflowStyle: 'none', borderRightWidth: '1px', borderRightColor: '#2f3031'}}>
+    <>
+      {/* Mobile overlay backdrop */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-30 md:hidden"
+          onClick={onCloseMobile}
+        />
+      )}
+
+      <div className={`fixed left-0 top-0 bottom-0 p-6 flex flex-col transition-all duration-300 overflow-y-auto scrollbar-hide ${
+        isMobile
+          ? (sidebarOpen ? 'w-64 z-40' : 'w-0 -translate-x-full z-40')
+          : (sidebarOpen ? (sidebarCollapsed ? 'w-20 z-40' : 'w-64 z-40') : 'w-0 z-40')
+      }`} style={{backgroundColor: '#0d0d0f', scrollbarWidth: 'none', msOverflowStyle: 'none', borderRightWidth: '1px', borderRightColor: '#2f3031'}}>
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
@@ -35,9 +58,13 @@ export default function DashboardSidebar({
       `}</style>
       <div className={`mb-8 pt-2 flex items-center justify-center ${sidebarCollapsed ? 'flex-col gap-4' : 'justify-center'}`}>
         <div className="flex items-center justify-center">
-          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-            <div className="w-4 h-4 bg-black rounded-full"></div>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Faith Logo"
+            width={32}
+            height={32}
+            className="object-contain flex-shrink-0"
+          />
         </div>
         {!sidebarCollapsed && (
           <button
@@ -60,23 +87,23 @@ export default function DashboardSidebar({
       <nav className="flex-1 space-y-4">
         <a
           href="/me"
-          onClick={() => setSelectedPage('home')}
-          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed ? 'justify-center' : ''} ${
+          onClick={() => handleNavClick('home')}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : ''} ${
             selectedPage === 'home' ? 'text-white' : 'text-gray-400'
           }`}
           style={selectedPage === 'home' ? {border: '2px solid #2f3031'} : {}}
           title="Home"
         >
           <Home size={20} className="flex-shrink-0" style={{color: selectedPage === 'home' ? '#22c55e' : 'currentColor'}} />
-          {!sidebarCollapsed && <span>Home</span>}
+          {(isMobile || !sidebarCollapsed) && <span>Home</span>}
         </a>
         <a
           href="/me"
-          onClick={() => setSelectedPage('profile')}
-          className={`flex items-center gap-3 rounded-lg transition ${sidebarCollapsed ? 'justify-center' : 'px-4 py-2'} ${
+          onClick={() => handleNavClick('profile')}
+          className={`flex items-center gap-3 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : 'px-4 py-2'} ${
             selectedPage === 'profile' ? 'text-white' : 'text-gray-400'
           }`}
-          style={selectedPage === 'profile' ? {border: '2px solid #2f3031', padding: sidebarCollapsed ? '6px' : '8px 16px'} : {padding: sidebarCollapsed ? '6px' : '8px 16px'}}
+          style={selectedPage === 'profile' ? {border: '2px solid #2f3031', padding: sidebarCollapsed && !isMobile ? '6px' : '8px 16px'} : {padding: sidebarCollapsed && !isMobile ? '6px' : '8px 16px'}}
           title="Profile"
         >
           {user.avatarUrl ? (
@@ -89,37 +116,38 @@ export default function DashboardSidebar({
           ) : (
             <User size={20} className="flex-shrink-0" style={{color: selectedPage === 'profile' ? '#22c55e' : 'currentColor'}} />
           )}
-          {!sidebarCollapsed && <span>Profile</span>}
+          {(isMobile || !sidebarCollapsed) && <span>Profile</span>}
         </a>
         <a
           href="/settings"
-          onClick={() => setSelectedPage('settings')}
-          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed ? 'justify-center' : ''} ${
+          onClick={() => handleNavClick('settings')}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : ''} ${
             selectedPage === 'settings' ? 'text-white' : 'text-gray-400'
           }`}
           style={selectedPage === 'settings' ? {border: '2px solid #2f3031'} : {}}
           title="Settings"
         >
           <Settings size={20} className="flex-shrink-0" style={{color: selectedPage === 'settings' ? '#22c55e' : 'currentColor'}} />
-          {!sidebarCollapsed && <span>Settings</span>}
+          {(isMobile || !sidebarCollapsed) && <span>Settings</span>}
         </a>
       </nav>
 
       <button
-        className={`flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 px-4 text-sm rounded-full transition mb-4 ${sidebarCollapsed ? 'w-full' : 'w-full'}`}
+        className={`flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 px-4 text-sm rounded-full transition mb-4 w-full`}
       >
         <span>+</span>
-        {!sidebarCollapsed && <span>new coin</span>}
+        {(isMobile || !sidebarCollapsed) && <span>new coin</span>}
       </button>
 
       <button
         onClick={handleLogout}
-        className={`flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-500/10 transition text-red-400 ${sidebarCollapsed ? 'justify-center' : ''}`}
+        className={`flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-500/10 transition text-red-400 ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
         title="Logout"
       >
         <LogOut size={20} className="flex-shrink-0" />
-        {!sidebarCollapsed && <span>Logout</span>}
+        {(isMobile || !sidebarCollapsed) && <span>Logout</span>}
       </button>
     </div>
+    </>
   );
 }
