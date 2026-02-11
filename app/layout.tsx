@@ -1,17 +1,23 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import PrivyProviderWrapper from '@/app/providers/PrivyProvider';
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: 'Faith Site',
-  description: 'Login with X (Twitter)',
+  title: 'Faith',
+  description: 'Login with X',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
   },
 };
 
-export default function RootLayout({
+export default function RootLayout({  
   children,
 }: {
   children: React.ReactNode;

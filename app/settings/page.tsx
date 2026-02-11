@@ -59,7 +59,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-green-400 text-lg">Loading...</div>
       </div>
     );
@@ -67,7 +67,7 @@ export default function SettingsPage() {
 
   if (!user || !isLoaded) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-green-400 text-lg">Not authenticated</div>
       </div>
     );
@@ -82,7 +82,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen text-white flex flex-col" style={{backgroundColor: '#0d0d0f'}}>
+    <div className="min-h-screen text-white flex flex-col">
       {/* Top Navigation Bar */}
       <DashboardTopbar 
         sidebarOpen={sidebarOpen}

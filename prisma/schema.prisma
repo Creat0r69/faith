@@ -20,4 +20,22 @@ model User {
   bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tokens    Token[]
+}
+
+model Token {
+  id          String   @id @default(uuid())
+  mint        String   @unique  // Solana token contract address (CA)
+  name        String
+  ticker      String
+  description String?
+  imageUrl    String?
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id])
+  isLive      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([creatorId])
+  @@index([createdAt])
 }

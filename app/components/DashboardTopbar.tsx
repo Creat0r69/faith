@@ -21,7 +21,7 @@ export default function DashboardTopbar({ sidebarOpen, sidebarCollapsed, user, i
   return (
     <div className={`fixed top-0 right-0 border-b backdrop-blur flex items-center gap-3 sm:gap-6 z-50 h-16 sm:h-24 px-3 sm:px-6 transition-all duration-300 ${
       isMobile ? 'left-0' : (sidebarOpen ? (sidebarCollapsed ? 'left-20' : 'left-64') : 'left-0')
-    }`} style={{backgroundColor: '#0d0d0f', borderBottomColor: '#2f3031'}}>
+    }`} style={{backgroundColor: 'rgba(9, 13, 14, 0.92)', borderBottomColor: '#2f3031'}}>
 
       {/* Mobile hamburger */}
       {isMobile && (
@@ -53,9 +53,9 @@ export default function DashboardTopbar({ sidebarOpen, sidebarCollapsed, user, i
           [how it works]
         </a>
         
-        <button className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-3 sm:px-5 text-xs sm:text-sm rounded-lg transition whitespace-nowrap hidden sm:block">
+        <a href="/create" className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-3 sm:px-5 text-xs sm:text-sm rounded-lg transition whitespace-nowrap hidden sm:block">
           + new project
-        </button>
+        </a>
 
         {/* Profile Section */}
         <div className="flex items-center gap-2 sm:gap-3 sm:pl-6" style={{borderLeftWidth: isMobile ? '0' : '1px', borderLeftColor: '#2f3031'}}>

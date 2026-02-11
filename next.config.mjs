@@ -10,6 +10,30 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'abs.twimg.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'dd.dexscreener.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.dexscreener.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pump.mypinata.cloud',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ipfs.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cf-ipfs.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'arweave.net',
+      },
     ],
   },
 };

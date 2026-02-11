@@ -66,21 +66,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="text-center">
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="text-center w-full max-w-sm">
         {/* Logo */}
-        <div className="mb-8 flex justify-center">
+        <div className="mb-6 sm:mb-8 flex justify-center">
           <Image
             src="/logo.png"
             alt="Faith Logo"
             width={80}
             height={80}
-            className="object-contain"
+            className="object-contain w-16 h-16 sm:w-20 sm:h-20"
           />
         </div>
-        
-        <h1 className="text-4xl font-bold text-green-400 mb-2">faith_site</h1>
-        <p className="text-gray-400 mb-12">Log in with your X account</p>
+        <p className="text-gray-400 mb-8 sm:mb-12 text-sm sm:text-base">Log in with your X account</p>
         
         {error && (
           <p className="text-red-400 mb-6 text-sm">{error}</p>

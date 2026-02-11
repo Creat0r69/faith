@@ -50,7 +50,7 @@ export default function DashboardSidebar({
         isMobile
           ? (sidebarOpen ? 'w-64 z-40' : 'w-0 -translate-x-full z-40')
           : (sidebarOpen ? (sidebarCollapsed ? 'w-20 z-40' : 'w-64 z-40') : 'w-0 z-40')
-      }`} style={{backgroundColor: '#0d0d0f', scrollbarWidth: 'none', msOverflowStyle: 'none', borderRightWidth: '1px', borderRightColor: '#2f3031'}}>
+      }`} style={{backgroundColor: 'rgba(9, 13, 14, 0.92)', scrollbarWidth: 'none', msOverflowStyle: 'none', borderRightWidth: '1px', borderRightColor: '#2f3031', backdropFilter: 'blur(12px)'}}>
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
@@ -86,7 +86,7 @@ export default function DashboardSidebar({
 
       <nav className="flex-1 space-y-4">
         <a
-          href="/me"
+          href="/home"
           onClick={() => handleNavClick('home')}
           className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : ''} ${
             selectedPage === 'home' ? 'text-white' : 'text-gray-400'
@@ -132,12 +132,13 @@ export default function DashboardSidebar({
         </a>
       </nav>
 
-      <button
+      <a
+        href="/create"
         className={`flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 px-4 text-sm rounded-full transition mb-4 w-full`}
       >
         <span>+</span>
         {(isMobile || !sidebarCollapsed) && <span>new coin</span>}
-      </button>
+      </a>
 
       <button
         onClick={handleLogout}

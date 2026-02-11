@@ -12,6 +12,9 @@ const config: Config = {
         indie: ['Indie Flower', 'cursive'],
         mono: ['Roboto Mono', 'monospace'],
       },
+      screens: {
+        'xs': '480px',
+      },
     },
   },
   plugins: [],
