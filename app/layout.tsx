@@ -18,15 +18,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Faith - Deploy Tokens on Solana',
     description: 'Deploy tokens, track real-time markets, and manage your Solana portfolio — all in one platform',
+    url: 'https://www.tradewithfaith.com',
+    siteName: 'Faith',
     images: [
       {
-        url: '/emb.png',
+        url: 'https://www.tradewithfaith.com/emb.png',
         width: 1200,
         height: 630,
         alt: 'Faith Platform',
+        type: 'image/png',
       },
     ],
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Faith - Deploy Tokens on Solana',
+    description: 'Deploy tokens, track real-time markets, and manage your Solana portfolio — all in one platform',
+    images: ['https://www.tradewithfaith.com/emb.png'],
   },
 };
 
