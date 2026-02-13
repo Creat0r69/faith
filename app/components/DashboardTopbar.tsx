@@ -49,10 +49,7 @@ export default function DashboardTopbar({ sidebarOpen, sidebarCollapsed, user, i
 
       {/* Right Section */}
       <div className="flex items-center gap-3 sm:gap-6 flex-shrink-0">
-        <a href="#" className="text-gray-400 text-sm hover:text-green-400 transition whitespace-nowrap hidden md:block">
-          [how it works]
-        </a>
-        
+      
         <a href="/create" className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-3 sm:px-5 text-xs sm:text-sm rounded-lg transition whitespace-nowrap hidden sm:block">
           + new project
         </a>

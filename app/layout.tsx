@@ -9,11 +9,24 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Faith',
-  description: 'Login with X',
+  title: 'Faith - Deploy Tokens on Solana',
+  description: 'Deploy tokens, track real-time markets, and manage your Solana portfolio — all in one platform',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
+  },
+  openGraph: {
+    title: 'Faith - Deploy Tokens on Solana',
+    description: 'Deploy tokens, track real-time markets, and manage your Solana portfolio — all in one platform',
+    images: [
+      {
+        url: '/emb.png',
+        width: 1200,
+        height: 630,
+        alt: 'Faith Platform',
+      },
+    ],
+    type: 'website',
   },
 };
 

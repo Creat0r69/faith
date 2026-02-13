@@ -130,6 +130,18 @@ export default function DashboardSidebar({
           <Settings size={20} className="flex-shrink-0" style={{color: selectedPage === 'settings' ? '#22c55e' : 'currentColor'}} />
           {(isMobile || !sidebarCollapsed) && <span>Settings</span>}
         </a>
+                <a
+          href="/Docs"
+          onClick={() => handleNavClick('Docs')}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : ''} ${
+            selectedPage === 'Docs' ? 'text-white' : 'text-gray-400'
+          }`}
+          style={selectedPage === 'Docs' ? {border: '2px solid #2f3031'} : {}}
+          title="Docs"
+        >
+          <Home size={20} className="flex-shrink-0" style={{color: selectedPage === 'Docs' ? '#22c55e' : 'currentColor'}} />
+          {(isMobile || !sidebarCollapsed) && <span>Docs</span>}
+        </a>
       </nav>
 
       <a
