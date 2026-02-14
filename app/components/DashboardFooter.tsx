@@ -9,8 +9,8 @@ export default function DashboardFooter() {
         marginLeft: '0'
       }}>
       <div className="flex items-center gap-4 sm:gap-8 flex-wrap justify-center">
-        <a href="#" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Terms</a>
-        <a href="#" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Dev Blueprint</a>
+        <a href="/terms" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Terms</a>
+        <a href="/dev-blueprint" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Dev Blueprint</a>
         <a href="#" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Community</a>
         <a href="#" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Support</a>
         <a href="#" className="text-gray-400 text-xs sm:text-sm hover:text-green-400 transition">Report</a>
