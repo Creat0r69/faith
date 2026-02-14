@@ -66,20 +66,15 @@ export default function HomePage() {
   const tokenMints = useMemo(() => tokens.map(t => t.mint), [tokens]);
   const { marketData, connected } = usePumpPortal(tokenMints);
 
-  // Auth check
+  // Auth check — only fetch if authenticated
   useEffect(() => {
-    if (privyReady && !authenticated) {
-      router.push('/login');
-    }
-  }, [privyReady, authenticated, router]);
-
-  // Fetch user
-  useEffect(() => {
+    if (!privyReady || !authenticated) return;
+    
     const fetchUser = async () => {
       try {
         const res = await fetch('/api/me');
         if (res.status === 401) {
-          router.push('/login');
+          setUser(null);
           return;
         }
         const data = await res.json();
@@ -89,7 +84,7 @@ export default function HomePage() {
       }
     };
     fetchUser();
-  }, [router]);
+  }, [privyReady, authenticated]);
 
   // Fetch tokens, then enrich with real metadata from DexScreener
   useEffect(() => {
@@ -227,21 +222,13 @@ export default function HomePage() {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-green-400 text-lg">Not authenticated</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen text-white flex flex-col">
       {/* Top Navigation Bar */}
       <DashboardTopbar
         sidebarOpen={sidebarOpen}
         sidebarCollapsed={sidebarCollapsed}
-        user={{ username: user.username, avatarUrl: user.avatarUrl }}
+        user={user ? { username: user.username, avatarUrl: user.avatarUrl } : null}
         isMobile={isMobile}
         onToggleSidebar={toggleSidebar}
       />
@@ -255,7 +242,7 @@ export default function HomePage() {
           setSidebarCollapsed={setSidebarCollapsed}
           selectedPage={selectedPage}
           setSelectedPage={setSelectedPage}
-          user={{ avatarUrl: user.avatarUrl, name: user.name }}
+          user={user ? { avatarUrl: user.avatarUrl, name: user.name } : null}
           handleLogout={handleLogout}
           isMobile={isMobile}
           onCloseMobile={() => toggleSidebar()}
@@ -341,7 +328,6 @@ export default function HomePage() {
                 ))}
               </div>
             )}
-
             {/* Table View */}
             {viewMode === 'table' && (
               <TokenTable
@@ -352,14 +338,13 @@ export default function HomePage() {
                 onSort={handleSort}
               />
             )}
-
             {/* Empty State */}
             {!loading && sortedTokens.length === 0 && (
               <div className="text-center py-20">
                 <div className="text-5xl mb-4">🚀</div>
                 <h3 className="text-xl font-bold text-white mb-2">No tokens launched yet</h3>
                 <p className="text-gray-400 text-sm mb-6">Be the first to launch a token on Faith</p>
-                <button className="bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 px-6 rounded-lg transition">
+                <button onClick={() => router.push('/create')} className="bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 px-6 rounded-lg transition">
                   + Launch Token
                 </button>
               </div>

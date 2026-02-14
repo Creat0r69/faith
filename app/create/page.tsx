@@ -54,20 +54,20 @@ export default function CreateTokenPage() {
   const DEPLOY_WALLET = '57ZMWc1zXFwH3cNso8MWGM2gnRW7JQNmi3tcdeVFjLzd';
   const INITIAL_LIQUIDITY = '1';
 
-  // Auth check
+  // Auth check — only fetch if authenticated
   useEffect(() => {
-    if (privyReady && !authenticated) {
-      router.push('/login');
+    if (!privyReady) return;
+    
+    if (!authenticated) {
+      setLoading(false);
+      return;
     }
-  }, [privyReady, authenticated, router]);
 
-  // Fetch user
-  useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await fetch('/api/me');
         if (res.status === 401) {
-          router.push('/login');
+          setUser(null);
           return;
         }
         const data = await res.json();
@@ -79,7 +79,7 @@ export default function CreateTokenPage() {
       }
     };
     fetchUser();
-  }, [router]);
+  }, [privyReady, authenticated]);
 
   const handleLogout = async () => {
     try {
@@ -118,20 +118,12 @@ export default function CreateTokenPage() {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-green-400 text-lg">Not authenticated</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen text-white flex flex-col">
       <DashboardTopbar
         sidebarOpen={sidebarOpen}
         sidebarCollapsed={sidebarCollapsed}
-        user={{ username: user.username, avatarUrl: user.avatarUrl }}
+        user={user ? { username: user.username, avatarUrl: user.avatarUrl } : null}
         isMobile={isMobile}
         onToggleSidebar={toggleSidebar}
       />
@@ -143,7 +135,7 @@ export default function CreateTokenPage() {
           setSidebarCollapsed={setSidebarCollapsed}
           selectedPage={selectedPage}
           setSelectedPage={setSelectedPage}
-          user={{ avatarUrl: user.avatarUrl, name: user.name }}
+          user={user ? { avatarUrl: user.avatarUrl, name: user.name } : null}
           handleLogout={handleLogout}
           isMobile={isMobile}
           onCloseMobile={() => toggleSidebar()}
@@ -286,7 +278,7 @@ export default function CreateTokenPage() {
                         ref={fileInputRef}
                         type="file"
                         accept="image/*"
-                        onChange={handleLogoUpload}
+                        onChange={(e) => handleLogoUpload(e)}
                         className="hidden"
                       />
                       {logoPreview ? (
@@ -515,8 +507,19 @@ export default function CreateTokenPage() {
                 </button>
               ) : (
                 <button
-                  className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-black font-bold rounded-lg px-6 py-2.5 text-sm transition"
+                  disabled={!authenticated}
+                  onClick={() => {
+                    if (!authenticated) return;
+                    // TODO: Implement token deployment logic
+                    console.log('Deploying token:', { tokenName, tokenSymbol, description });
+                  }}
+                  className={`flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold transition ${
+                    !authenticated
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      : 'bg-green-500 hover:bg-green-600 text-black'
+                  }`}
                   style={{ fontFamily: 'monospace' }}
+                  title={!authenticated ? 'Login to deploy token' : 'Deploy token'}
                 >
                   <Rocket size={16} />
                   DEPLOY TOKEN

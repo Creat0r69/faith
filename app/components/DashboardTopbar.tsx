@@ -10,7 +10,7 @@ interface DashboardTopbarProps {
   user: {
     username: string;
     avatarUrl: string | null;
-  };
+  } | null;
   isMobile?: boolean;
   onToggleSidebar?: () => void;
 }
@@ -50,25 +50,33 @@ export default function DashboardTopbar({ sidebarOpen, sidebarCollapsed, user, i
       {/* Right Section */}
       <div className="flex items-center gap-3 sm:gap-6 flex-shrink-0">
       
-        <a href="/create" className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-3 sm:px-5 text-xs sm:text-sm rounded-lg transition whitespace-nowrap hidden sm:block">
-          + new project
-        </a>
+        {user && (
+          <a href="/create" className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-3 sm:px-5 text-xs sm:text-sm rounded-lg transition whitespace-nowrap hidden sm:block">
+            + new project
+          </a>
+        )}
 
-        {/* Profile Section */}
-        <div className="flex items-center gap-2 sm:gap-3 sm:pl-6" style={{borderLeftWidth: isMobile ? '0' : '1px', borderLeftColor: '#2f3031'}}>
-          {user.avatarUrl && (
-            <img
-              src={user.avatarUrl}
-              alt={user.username}
-              className="w-7 h-7 sm:w-9 sm:h-9 rounded-full object-cover" 
-              style={{border: '1px solid #2f3031'}}
-            />
-          )}
-          <div className="text-right hidden xs:block">
-            <p className="text-xs font-semibold text-white">${user.username.toUpperCase()}</p>
-            <p className="text-xs text-gray-400">{loading ? '...' : `${balance} SOL`}</p>
+        {/* Profile Section / Login Button */}
+        {user ? (
+          <div className="flex items-center gap-2 sm:gap-3 sm:pl-6" style={{borderLeftWidth: isMobile ? '0' : '1px', borderLeftColor: '#2f3031'}}>
+            {user.avatarUrl && (
+              <img
+                src={user.avatarUrl}
+                alt={user.username}
+                className="w-7 h-7 sm:w-9 sm:h-9 rounded-full object-cover" 
+                style={{border: '1px solid #2f3031'}}
+              />
+            )}
+            <div className="text-right hidden xs:block">
+              <p className="text-xs font-semibold text-white">${user.username.toUpperCase()}</p>
+              <p className="text-xs text-gray-400">{loading ? '...' : `${balance} SOL`}</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <a href="/login" className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-3 sm:px-5 text-xs sm:text-sm rounded-lg transition whitespace-nowrap">
+            Login
+          </a>
+        )}
       </div>
     </div>
   );

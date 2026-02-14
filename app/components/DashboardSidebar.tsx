@@ -12,7 +12,7 @@ interface DashboardSidebarProps {
   user: {
     avatarUrl: string | null;
     name: string;
-  };
+  } | null;
   handleLogout: () => void;
   isMobile?: boolean;
   onCloseMobile?: () => void;
@@ -46,7 +46,7 @@ export default function DashboardSidebar({
         />
       )}
 
-      <div className={`fixed left-0 top-0 bottom-0 p-6 flex flex-col transition-all duration-300 overflow-y-auto scrollbar-hide ${
+      <div className={`fixed left-0 top-0 bottom-0 p-6 pb-16 flex flex-col transition-all duration-300 overflow-y-auto scrollbar-hide ${
         isMobile
           ? (sidebarOpen ? 'w-64 z-40' : 'w-0 -translate-x-full z-40')
           : (sidebarOpen ? (sidebarCollapsed ? 'w-20 z-40' : 'w-64 z-40') : 'w-0 z-40')
@@ -97,16 +97,26 @@ export default function DashboardSidebar({
           <Home size={20} className="flex-shrink-0" style={{color: selectedPage === 'home' ? '#22c55e' : 'currentColor'}} />
           {(isMobile || !sidebarCollapsed) && <span>Home</span>}
         </a>
+        
+        {/* Profile - visible but disabled when not authenticated */}
         <a
-          href="/me"
-          onClick={() => handleNavClick('profile')}
+          href={user ? "/me" : "#"}
+          onClick={(e) => {
+            if (!user) {
+              e.preventDefault();
+              return;
+            }
+            handleNavClick('profile');
+          }}
           className={`flex items-center gap-3 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : 'px-4 py-2'} ${
+            !user ? 'opacity-50 cursor-not-allowed' : ''
+          } ${
             selectedPage === 'profile' ? 'text-white' : 'text-gray-400'
           }`}
           style={selectedPage === 'profile' ? {border: '2px solid #2f3031', padding: sidebarCollapsed && !isMobile ? '6px' : '8px 16px'} : {padding: sidebarCollapsed && !isMobile ? '6px' : '8px 16px'}}
-          title="Profile"
+          title={user ? "Profile" : "Login to access profile"}
         >
-          {user.avatarUrl ? (
+          {user?.avatarUrl ? (
             <img
               src={user.avatarUrl}
               alt={user.name}
@@ -118,6 +128,8 @@ export default function DashboardSidebar({
           )}
           {(isMobile || !sidebarCollapsed) && <span>Profile</span>}
         </a>
+        
+        {/* Settings - enabled for all users */}
         <a
           href="/settings"
           onClick={() => handleNavClick('settings')}
@@ -130,7 +142,8 @@ export default function DashboardSidebar({
           <Settings size={20} className="flex-shrink-0" style={{color: selectedPage === 'settings' ? '#22c55e' : 'currentColor'}} />
           {(isMobile || !sidebarCollapsed) && <span>Settings</span>}
         </a>
-                <a
+        
+        <a
           href="/Docs"
           onClick={() => handleNavClick('Docs')}
           className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${sidebarCollapsed && !isMobile ? 'justify-center' : ''} ${
@@ -152,14 +165,25 @@ export default function DashboardSidebar({
         {(isMobile || !sidebarCollapsed) && <span>new coin</span>}
       </a>
 
-      <button
-        onClick={handleLogout}
-        className={`flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-500/10 transition text-red-400 ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
-        title="Logout"
-      >
-        <LogOut size={20} className="flex-shrink-0" />
-        {(isMobile || !sidebarCollapsed) && <span>Logout</span>}
-      </button>
+      {/* Logout button when authenticated, Login button when not */}
+      {user ? (
+        <button
+          onClick={handleLogout}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-500/10 transition text-red-400 ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
+          title="Logout"
+        >
+          <LogOut size={20} className="flex-shrink-0" />
+          {(isMobile || !sidebarCollapsed) && <span>Logout</span>}
+        </button>
+      ) : (
+        <a
+          href="/login"
+          className={`flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 px-4 text-sm rounded-lg transition w-full`}
+          title="Login"
+        >
+          {(isMobile || !sidebarCollapsed) && <span>Login</span>}
+        </a>
+      )}
     </div>
     </>
   );

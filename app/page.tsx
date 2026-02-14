@@ -153,10 +153,10 @@ export default function LandingPage() {
           Deploy on Pump.fun and more launchpads
         </p>
           <h2 className="text-3xl sm:text-5xl font-bold text-center text-white mb-3">
-            <span className="italic text-green-400">Built</span> for Solana builders
+            <span className="italic text-green-400">Built</span> for Artists & Builders
           </h2>
           <p className="text-gray-500 text-center text-sm sm:text-base mb-16 max-w-xl mx-auto">
-            Everything you need to launch, trade, and manage tokens — no code required.
+            Everything you need to launch and manage tokens.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -20,18 +20,20 @@ interface User {
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { logout: privyLogout } = usePrivy();
+  const { ready: privyReady, authenticated, logout: privyLogout } = usePrivy();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const { sidebarOpen, sidebarCollapsed, setSidebarCollapsed, isMobile, toggleSidebar, isLoaded } = useSidebarState();
   const [selectedPage, setSelectedPage] = useState('settings');
 
   useEffect(() => {
+    if (!privyReady) return;
+    
     const fetchUser = async () => {
       try {
         const res = await fetch('/api/me');
         if (res.status === 401) {
-          router.push('/login');
+          setUser(null);
           return;
         }
         const data = await res.json();
@@ -44,7 +46,7 @@ export default function SettingsPage() {
     };
 
     fetchUser();
-  }, [router]);
+  }, [privyReady]);
 
   const handleLogout = async () => {
     try {
@@ -57,18 +59,19 @@ export default function SettingsPage() {
     }
   };
 
-  if (loading) {
+  // Helper to require auth before interaction
+  const requireAuth = (callback: () => void) => {
+    if (!authenticated) {
+      router.push('/login');
+      return;
+    }
+    callback();
+  };
+
+  if (loading || !isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-green-400 text-lg">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user || !isLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-green-400 text-lg">Not authenticated</div>
       </div>
     );
   }
@@ -87,10 +90,10 @@ export default function SettingsPage() {
       <DashboardTopbar 
         sidebarOpen={sidebarOpen}
         sidebarCollapsed={sidebarCollapsed}
-        user={{
+        user={user ? {
           username: user.username,
           avatarUrl: user.avatarUrl
-        }}
+        } : null}
         isMobile={isMobile}
         onToggleSidebar={toggleSidebar}
       />
@@ -120,10 +123,10 @@ export default function SettingsPage() {
           setSidebarCollapsed={setSidebarCollapsed}
           selectedPage={selectedPage}
           setSelectedPage={setSelectedPage}
-          user={{
+          user={user ? {
             avatarUrl: user.avatarUrl,
             name: user.name
-          }}
+          } : null}
           handleLogout={handleLogout}
           isMobile={isMobile}
           onCloseMobile={() => toggleSidebar()}
@@ -136,7 +139,7 @@ export default function SettingsPage() {
           <div className="w-full max-w-lg">
             {/* Profile Section */}
             <div className="text-center mb-8 sm:mb-12">
-              {user.avatarUrl && (
+              {user?.avatarUrl && (
                 <img
                   src={user.avatarUrl}
                   alt={user.name}
@@ -144,36 +147,48 @@ export default function SettingsPage() {
                   style={{borderWidth: '2px', borderColor: '#22c55e'}}
                 />
               )}
-              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">${user.username.toUpperCase()}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">${user?.username.toUpperCase() || 'GUEST'}</h1>
               <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
-                &#128279; {user.bio || 'No bio set'}
+                &#128279; {user?.bio || 'No bio set'}
               </p>
             </div>
               
             {/* Settings Items */}
             <div className="space-y-3">
-              {settingsItems.map((item, index) => (
-                <a
-                  key={index}
-                  href={item.href || '#'}
-                  target={item.href && item.href.startsWith('http') ? '_blank' : undefined}
-                  rel={item.href && item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  onClick={(e) => {
-                    if (item.onClick) {
-                      e.preventDefault();
-                      item.onClick();
-                    }
-                  }}
-                  className="w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition hover:bg-green-500/10 group block"
-                  style={{
-                    backgroundColor: '#161618',
-                    border: '1px solid #2f3031'
-                  }}
-                >
-                  <span className="text-white font-medium">{item.label}</span>
-                  <ChevronRight size={20} className="text-gray-400 group-hover:text-green-400 transition" />
-                </a>
-              ))}
+              {settingsItems.map((item, index) => {
+                // Check if this is the X social button (always enabled)
+                const isXButton = item.href === 'https://x.com/launchwithfaith';
+                const isDisabled = !user && !isXButton;
+                
+                return (
+                  <a
+                    key={index}
+                    href={item.href || '#'}
+                    target={item.href && item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={item.href && item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    onClick={(e) => {
+                      if (isDisabled) {
+                        e.preventDefault();
+                        return;
+                      }
+                      if (item.onClick) {
+                        e.preventDefault();
+                        requireAuth(item.onClick);
+                      }
+                    }}
+                    className={`w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition block ${
+                      isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-500/10 group'
+                    }`}
+                    style={{
+                      backgroundColor: '#161618',
+                      border: '1px solid #2f3031'
+                    }}
+                  >
+                    <span className="text-white font-medium">{item.label}</span>
+                    <ChevronRight size={20} className={`transition ${isDisabled ? 'text-gray-600' : 'text-gray-400 group-hover:text-green-400'}`} />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
